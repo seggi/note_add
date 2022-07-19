@@ -1,7 +1,7 @@
 // Custom colors
 import 'package:flutter/material.dart';
 
-const Color fkDefaultColor = Color(0XFF3EB489);
+const Color naDefaultColor = Color(0XFF3EB489);
 
 // Horizontal Spacing
 

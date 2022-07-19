@@ -26,14 +26,16 @@ class _FormInputFieldState extends State<FormInputField> {
           : TextInputType.text,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white,
           hintText:
               inputName == "email" ? 'example@test.com' : "Enter password",
           suffixIcon: inputName == "email"
               ? const Icon(Icons.email, color: Colors.black)
               : const Icon(Icons.lock, color: Colors.black),
           border: OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.black, width: 1.0),
-              borderRadius: BorderRadius.circular(0.0))),
+              // borderSide: const BorderSide(color: Colors.black, width: 1.0),
+              borderRadius: BorderRadius.circular(4.0))),
     );
   }
 }
