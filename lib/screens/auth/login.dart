@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:note_add/constants/app_label.dart';
+import 'package:note_add/controllers/page_generator.dart';
 import 'package:note_add/widgets/share/style.dart';
 import 'package:note_add/widgets/text_input.dart';
 
@@ -52,7 +53,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     verticalSpaceMedium,
                     TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          PageGenerator.directTo(context, pathName: "/");
+                        },
                         child: Container(
                           width: MediaQuery.of(context).size.width,
                           color: Colors.black,

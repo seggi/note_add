@@ -1,25 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:note_add/screens/start_scr.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:note_add/constants/app_label.dart';
+import 'package:note_add/controllers/page_generator.dart';
+import 'package:note_add/providers/provider_list.dart';
+import 'package:note_add/widgets/share/style.dart';
+import 'package:provider/provider.dart';
 
-Future<void> main() async {
-  await GetStorage.init();
-  runApp(const MyApp());
+import 'core/user_preferences.dart';
+
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // await dotenv.load();
+  // await UserPreferences.init();
+  return runApp(
+    MultiProvider(
+      providers: NaProvider.multi(),
+      child: const NoteAddApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+void initialization(BuildContext context) async {
+  await Future.delayed(const Duration(seconds: 1));
+}
 
-  // This widget is the root of your application.
+class NoteAddApp extends StatelessWidget {
+  const NoteAddApp({Key? key}) : super(key: key);
+  static const title = appName;
+
   @override
-  Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Note Add',
-      theme: ThemeData(
-        primarySwatch: Colors.grey,
-      ),
-      home: const HomeScreen(),
-    );
-  }
+  Widget build(BuildContext context) =>
+      ChangeNotifierProvider<AuthenticationData>.value(
+        value: loginInfo,
+        child: MaterialApp.router(
+          title: appName,
+          theme: ThemeData(
+            primaryColor: naDefaultColor,
+            colorScheme: ColorScheme.fromSwatch().copyWith(
+              primary: naDefaultColor,
+              secondary: const Color(0XFFF9F9F9),
+            ),
+          ),
+          debugShowCheckedModeBanner: false,
+          routeInformationParser: PageGenerator.router.routeInformationParser,
+          routeInformationProvider:
+              PageGenerator.router.routeInformationProvider,
+          routerDelegate: PageGenerator.router.routerDelegate,
+        ),
+      );
 }
