@@ -18,7 +18,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: fkDefaultColor,
+        padding: const EdgeInsets.all(8.0),
+        color: naDefaultColor,
         child: Column(
           children: [
             Container(
