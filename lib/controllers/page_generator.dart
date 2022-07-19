@@ -14,7 +14,7 @@ class PageGenerator {
       ),
       GoRoute(
         path: "/sign-up",
-        builder: (context, state) => const RegisterScreen(),
+        builder: (context, state) => const SignUpScreen(),
       ),
       GoRoute(
         path: "/",

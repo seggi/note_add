@@ -42,12 +42,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         children: [
                           FormInputField(
-                              inputController: emailController,
-                              inputName: "email"),
+                            inputController: emailController,
+                            inputName: "email",
+                            hintText: "Enter email",
+                          ),
                           verticalSpaceSmall,
                           FormInputField(
-                              inputController: emailController,
-                              inputName: "pwd"),
+                            inputController: passwordController,
+                            inputName: "pwd",
+                            hintText: "Password",
+                          ),
                         ],
                       ),
                     ),
@@ -75,7 +79,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     Align(
                       alignment: Alignment.bottomLeft,
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () =>
+                            PageGenerator.goTo(context, pathName: "/sign-up"),
                         child: const Text(
                           "Don't have an account? click here",
                           style: TextStyle(color: Colors.black),
