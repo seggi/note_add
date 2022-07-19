@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 class FormInputField extends StatefulWidget {
   TextEditingController inputController;
   String inputName;
+  String? hintText;
   FormInputField(
-      {Key? key, required this.inputController, required this.inputName})
+      {Key? key,
+      required this.inputController,
+      required this.inputName,
+      this.hintText})
       : super(key: key);
 
   @override
@@ -14,28 +18,42 @@ class FormInputField extends StatefulWidget {
 }
 
 class _FormInputFieldState extends State<FormInputField> {
+  final inputNames = ["email", "username", "pwd", "repPwd"];
   @override
   Widget build(BuildContext context) {
     TextEditingController inputController = widget.inputController;
     String inputName = widget.inputName;
-    return TextFormField(
-      obscureText: inputName == "email" ? false : true,
-      controller: inputController,
-      keyboardType: inputName == "email"
-          ? TextInputType.emailAddress
-          : TextInputType.text,
-      textInputAction: TextInputAction.next,
-      decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.white,
-          hintText:
-              inputName == "email" ? 'example@test.com' : "Enter password",
-          suffixIcon: inputName == "email"
-              ? const Icon(Icons.email, color: Colors.black)
-              : const Icon(Icons.lock, color: Colors.black),
-          border: OutlineInputBorder(
-              // borderSide: const BorderSide(color: Colors.black, width: 1.0),
-              borderRadius: BorderRadius.circular(4.0))),
-    );
+    final hintText = widget.hintText;
+
+    if (inputNames.contains(inputName)) {
+      return TextFormField(
+        obscureText: inputName == "pwd" ? true : false,
+        controller: inputController,
+        keyboardType: inputName == "email"
+            ? TextInputType.emailAddress
+            : TextInputType.text,
+        textInputAction: TextInputAction.next,
+        decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            hintText: hintText,
+            border: OutlineInputBorder(
+                // borderSide: const BorderSide(color: Colors.black, width: 1.0),
+                borderRadius: BorderRadius.circular(4.0))),
+      );
+    } else {
+      return TextFormField(
+        controller: inputController,
+        keyboardType: TextInputType.text,
+        textInputAction: TextInputAction.next,
+        decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            hintText: hintText,
+            border: OutlineInputBorder(
+                // borderSide: const BorderSide(color: Colors.black, width: 1.0),
+                borderRadius: BorderRadius.circular(4.0))),
+      );
+    }
   }
 }

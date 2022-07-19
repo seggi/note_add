@@ -4,16 +4,18 @@ import 'package:note_add/controllers/page_generator.dart';
 import 'package:note_add/widgets/share/style.dart';
 import 'package:note_add/widgets/text_input.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController passwordController = TextEditingController();
+class _SignUpScreenState extends State<SignUpScreen> {
+  TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController repeatPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +26,14 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           children: [
             Container(
+              padding: const EdgeInsets.all(8.0),
               margin: const EdgeInsets.symmetric(vertical: 80),
-              child: const Align(
-                alignment: Alignment.center,
+              child: Align(
+                alignment: Alignment.centerLeft,
                 child: Text(
-                  appName,
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  appLabel['text']![0],
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -48,9 +52,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           verticalSpaceSmall,
                           FormInputField(
+                            inputController: usernameController,
+                            inputName: "Username",
+                            hintText: "Username",
+                          ),
+                          verticalSpaceSmall,
+                          FormInputField(
                             inputController: passwordController,
                             inputName: "pwd",
                             hintText: "Password",
+                          ),
+                          verticalSpaceSmall,
+                          FormInputField(
+                            inputController: passwordController,
+                            inputName: "repPwd",
+                            hintText: "Repeat password",
                           ),
                         ],
                       ),
@@ -67,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: const Align(
                             alignment: Alignment.center,
                             child: Text(
-                              "Login",
+                              "Sign Up",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
@@ -80,9 +96,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       alignment: Alignment.bottomLeft,
                       child: TextButton(
                         onPressed: () =>
-                            PageGenerator.goTo(context, pathName: "/sign-up"),
+                            PageGenerator.goTo(context, pathName: "/login"),
                         child: const Text(
-                          "Don't have an account? click here",
+                          "Already have an account? click here",
                           style: TextStyle(color: Colors.black),
                         ),
                       ),

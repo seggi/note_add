@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class FkContentBoxWidgets {
+class NaContentBoxWidgets {
   static Widget body(context, screenName,
       {widTxt = "", List<Widget> itemList = const [], fn}) {
     if (screenName == "home") {
