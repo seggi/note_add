@@ -1,6 +1,14 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
 import 'package:note_add/constants/app_label.dart';
 import 'package:note_add/controllers/page_generator.dart';
+import 'package:note_add/core/user.dart';
+import 'package:note_add/core/user_preferences.dart';
+import 'package:note_add/utils/api.dart';
+import 'package:note_add/utils/jwt_decode.dart';
 import 'package:note_add/widgets/share/style.dart';
 import 'package:note_add/widgets/text_input.dart';
 
@@ -12,8 +20,74 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool isLoading = false;
+  final _formKey = GlobalKey();
+
   TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+
+  Future login() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    late ScaffoldMessengerState scaffoldMessenger =
+        ScaffoldMessenger.of(context);
+    setState(() {
+      isLoading = true;
+    });
+
+    final String email = emailController.text;
+    final String password = passwordController.text;
+
+    if (emailController.text.isEmpty) {
+      scaffoldMessenger
+          .showSnackBar(const SnackBar(content: Text("Please Enter email")));
+    }
+
+    if (passwordController.text.isEmpty) {
+      scaffoldMessenger
+          .showSnackBar(const SnackBar(content: Text("Please Enter Password")));
+    } else {
+      final response = await http.post(Uri.parse(Network.login),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(
+              <String, String>{'email': email, 'password': password}));
+      // Save token in local storage and manage it
+      if (response.statusCode == 201) {
+        User user = User.fromJson(jsonDecode(response.body));
+
+        UserPreferences.setToken(user.token!);
+        UserPreferences.setUserId(user.data!["user_id"].toString());
+
+        fkJwtDecode(tokenKey: user.token);
+
+        if (user.data!['status'] == true) {
+          // ignore: use_build_context_synchronously
+          PageGenerator.directTo(context,
+              pathName: "/",
+              itemData: {"data": user.data},
+              provider: "auth",
+              token: user.token);
+        } else {
+          // ignore: use_build_context_synchronously
+          PageGenerator.goTo(context,
+              pathName: "/complete-profile",
+              itemData: {"data": user.data, "token": user.token},
+              provider: "auth");
+        }
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        scaffoldMessenger.showSnackBar(const SnackBar(
+          content: Text(
+            "Wrong password or email",
+            style: TextStyle(color: Colors.red),
+          ),
+        ));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -11,8 +11,8 @@ import 'core/user_preferences.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await dotenv.load();
-  // await UserPreferences.init();
+  await dotenv.load();
+  await UserPreferences.init();
   return runApp(
     MultiProvider(
       providers: NaProvider.multi(),
