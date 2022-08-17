@@ -6,7 +6,6 @@ class NavigationPath extends ChangeNotifier {
   String get screenPath => _screenPath;
 
   void changeScreen(String screenPath) {
-    print("::::");
     _screenPath = screenPath;
     notifyListeners();
   }

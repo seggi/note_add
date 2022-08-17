@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:note_add/constants/app_label.dart';
 import 'package:note_add/controllers/page_generator.dart';
 import 'package:note_add/providers/authentication.dart';
 import 'package:note_add/providers/na_provider.dart';
 import 'package:note_add/widgets/share/style.dart';
 import 'package:provider/provider.dart';
-
 import 'core/user_preferences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
