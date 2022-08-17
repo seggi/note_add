@@ -3,20 +3,22 @@ class User {
   final int? userId;
   final String? email;
   final String? token;
+  final String? error;
 
   User({
     this.userId,
     this.data,
     this.email,
     this.token,
+    this.error,
   });
 
   factory User.fromJson(Map<String, dynamic> responseData) {
     return User(
-      data: responseData['data'],
-      email: responseData['message'],
-      token: responseData['access_fresh_token'],
-    );
+        data: responseData['data'],
+        email: responseData['message'],
+        token: responseData['access_token'],
+        error: responseData['error']);
   }
 }
 

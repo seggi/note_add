@@ -9,4 +9,19 @@ class NaManageProviders {
     "login": (context, {itemData}) =>
         Provider.of<AuthenticationData>(context, listen: false).login(itemData),
   };
+
+  static Map update(context) {
+    return {};
+  }
+
+  static Map delete(context) {
+    return {};
+  }
+
+  static Map get(context) {
+    return {
+      "auth": Provider.of<AuthenticationData>(context).getUserData,
+      "get-token": Provider.of<AuthenticationData>(context).userToken,
+    };
+  }
 }

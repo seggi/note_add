@@ -38,50 +38,65 @@ class _LoginScreenState extends State<LoginScreen> {
     final String password = passwordController.text;
 
     if (emailController.text.isEmpty) {
+      setState(() {
+        isLoading = false;
+      });
       scaffoldMessenger
           .showSnackBar(const SnackBar(content: Text("Please Enter email")));
     }
 
     if (passwordController.text.isEmpty) {
+      setState(() {
+        isLoading = false;
+      });
       scaffoldMessenger
           .showSnackBar(const SnackBar(content: Text("Please Enter Password")));
     } else {
+      setState(() {
+        isLoading = true;
+      });
       final response = await http.post(Uri.parse(Network.login),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
           body: jsonEncode(
               <String, String>{'email': email, 'password': password}));
-      // Save token in local storage and manage it
-      if (response.statusCode == 201) {
-        User user = User.fromJson(jsonDecode(response.body));
 
+      // Save token in local storage and manage it
+      if (response.statusCode == 200) {
+        setState(() {
+          isLoading = false;
+        });
+
+        User user = User.fromJson(jsonDecode(response.body));
         UserPreferences.setToken(user.token!);
-        UserPreferences.setUserId(user.data!["user_id"].toString());
 
         fkJwtDecode(tokenKey: user.token);
+        // ignore: use_build_context_synchronously
+        PageGenerator.directTo(context,
+            pathName: "/",
+            itemData: {"data": user.data},
+            provider: "auth",
+            token: user.token);
+      } else if (response.statusCode == 400) {
+        User user = User.fromJson(jsonDecode(response.body));
+        setState(() {
+          isLoading = false;
+        });
 
-        if (user.data!['status'] == true) {
-          // ignore: use_build_context_synchronously
-          PageGenerator.directTo(context,
-              pathName: "/",
-              itemData: {"data": user.data},
-              provider: "auth",
-              token: user.token);
-        } else {
-          // ignore: use_build_context_synchronously
-          PageGenerator.goTo(context,
-              pathName: "/complete-profile",
-              itemData: {"data": user.data, "token": user.token},
-              provider: "auth");
-        }
+        scaffoldMessenger.showSnackBar(SnackBar(
+          content: Text(
+            "${user.error}",
+            style: TextStyle(color: Colors.red),
+          ),
+        ));
       } else {
         setState(() {
           isLoading = false;
         });
         scaffoldMessenger.showSnackBar(const SnackBar(
           content: Text(
-            "Wrong password or email",
+            "Error from server.",
             style: TextStyle(color: Colors.red),
           ),
         ));
@@ -109,6 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             SizedBox(
               child: Form(
+                key: _formKey,
                 child: Column(
                   children: [
                     Padding(
@@ -131,24 +147,41 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     verticalSpaceMedium,
                     TextButton(
-                        onPressed: () {
-                          PageGenerator.directTo(context, pathName: "/");
-                        },
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          color: Colors.black,
-                          padding: const EdgeInsets.all(16.0),
-                          child: const Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              "Login",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
+                      onPressed: isLoading == false ? () => login() : () {},
+                      child: isLoading == false
+                          ? Container(
+                              width: MediaQuery.of(context).size.width,
+                              color: Colors.black,
+                              padding: const EdgeInsets.all(16.0),
+                              child: const Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "Login",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            )
+                          : Container(
+                              width: MediaQuery.of(context).size.width,
+                              color: Colors.black,
+                              padding: const EdgeInsets.all(16.0),
+                              child: const Align(
+                                  alignment: Alignment.center,
+                                  child: SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2.0,
+                                      ),
+                                    ),
+                                  )),
                             ),
-                          ),
-                        )),
+                    ),
                     verticalSpaceRegular,
                     Align(
                       alignment: Alignment.bottomLeft,

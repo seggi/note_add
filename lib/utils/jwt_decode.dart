@@ -8,7 +8,6 @@ Map<String, dynamic> fkJwtDecode({tokenKey}) {
 
   if (!isTokenExpired) {}
   DateTime expirationDate = JwtDecoder.getExpirationDate(token);
-  Duration tokenTime = JwtDecoder.getTokenTime(token);
 
   Map<String, dynamic> getTokenData = {
     "token": tokenKey,
