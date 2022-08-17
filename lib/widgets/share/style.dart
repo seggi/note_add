@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 const Color naDefaultColor = Color(0XFF3EB489);
+const Color naPrimaryColor = Color.fromARGB(255, 199, 255, 235);
 
 // Horizontal Spacing
 
